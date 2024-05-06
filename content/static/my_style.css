@@ -1,0 +1,13 @@
+.max-m {
+    
+}
+
+.contenteditable-div {
+    min-height: 60px; /* Set the minimum height to start with */
+    overflow: hidden; /* Hide overflow */
+    border: 1px solid #ced4da; /* Add border */
+    padding: 5px; /* Add padding */
+    outline: none; /* Remove default outline */
+    resize: none; /* Disable resizing */
+    white-space: pre-wrap; /* Allow line breaks */
+}
