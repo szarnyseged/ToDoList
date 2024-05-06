@@ -4,6 +4,7 @@ from content.models import ToDoCard, ToDoContent
 from content.dummy_datas import dummy_cards, dummy_contents
 
 
+# create db
 with app.app_context():
     db.create_all()
     for card in dummy_cards:
@@ -19,7 +20,7 @@ with app.app_context():
     print("")
     print(ToDoContent.query.all())
     check_obj = ToDoCard.query.filter_by(id=2).first()
-    print("\n", check_obj.content)
+    print("\n", "bugcheck: db create ", check_obj.content)
 
 
 

@@ -1,4 +1,5 @@
 
+// Done button
 document.addEventListener("DOMContentLoaded", function() {
     // Find all "Done" buttons
     var doneButtons = document.querySelectorAll('.card-link.DoneButton');
@@ -20,8 +21,6 @@ document.addEventListener("DOMContentLoaded", function() {
             //button.style.display = 'none';
             button.textContent = "Not Done"
 
-            console.log("card: ", card)
-
             // Make a POST request to the Flask endpoint
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/done", true);
@@ -42,22 +41,41 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-document.addEventListener("DCOMContentLoaded", function() {
+// Add line button
+document.addEventListener("DOMContentLoaded", function() {
     // find all "AddLineButtons"
-    var AddLineButtons = document.querySelectorAll(".card-link.AddLineButton")
+    var AddLineButtons = document.querySelectorAll(".card-link.AddLineButton");
 
     // attach click event listener
     AddLineButtons.forEach(function(button) {
         button.addEventListener("click", function(event) {
             // prevent default link behavior
+            // this is used to prevent eg.: <a> navigation to an url, OR submit form button functionality,
+            // ensuring that only this custom behavior will be executed 
             event.preventDefault();
 
             // Find the parent list-group element
-            var ListGroup = this.closest(".list-group");
+            var listGroup = this.closest(".card-body").querySelector(".list-group");
+            console.log(listGroup);
 
-            // attach new list-group-item
-            
-        })
-    })
+            // create new list-group-item
+            var newItem = document.createElement("li");
+            newItem.classList.add("list-group-item");
 
-})
+            // create inner html
+            newItem.innerHTML = `
+            <div class="row">
+                <div class="col-2 align-self-center">
+                    <input class="form-check-input me-1 fs-5" type="checkbox" value="">
+                </div>
+                <div class="col-10">
+                    <div class="contenteditable-div" contenteditable="true" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
+                    </div>
+                </div>
+            </div>`;
+
+            // append
+            listGroup.appendChild(newItem);
+        });
+    });
+});
