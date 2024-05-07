@@ -96,7 +96,8 @@
 
                         <!--gpt-->
                         {% for card in ToDoCard %}
-                            <div class="card bg-secondary-subtle text-light m-3" style="max-width: 18rem;">
+                            
+                            <div class="card bg-secondary-subtle text-light m-3" id="{{ card.id }}" style="max-width: 18rem;">
                                 <div class="card-body">
                                     <div class="modal-header">
                                         <h5 class="card-title text-black">{{ card.title }}</h5>

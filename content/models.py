@@ -11,7 +11,6 @@ class ToDoCard(db.Model):
     title = db.Column(db.String(80))
     subtitle = db.Column(db.String(80))
     # issue? relationship?
-    # foreign_key -> flask sql_alchemy names the tables with "_"
     content = db.relationship("ToDoContent", lazy=True, backref="content_obj")
 
 

@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", function() {
             //button.style.display = 'none';
             button.textContent = "Not Done"
 
+            console.log(card.id)
+
             // Make a POST request to the Flask endpoint
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/done", true);
@@ -36,7 +38,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
                 }
             };
-            xhr.send(JSON.stringify({card_id: card})); // Send card id or any other relevant data
+            xhr.send(JSON.stringify({
+                card_id: card.id,
+                
+            })); // Send card id or any other relevant data
         });
     });
 });
