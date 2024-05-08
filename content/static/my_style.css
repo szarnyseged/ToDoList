@@ -2,12 +2,19 @@
     
 }
 
+/* gpt
 .contenteditable-div {
-    min-height: 60px; /* Set the minimum height to start with */
-    overflow: hidden; /* Hide overflow */
-    border: 1px solid #ced4da; /* Add border */
-    padding: 5px; /* Add padding */
-    outline: none; /* Remove default outline */
-    resize: none; /* Disable resizing */
-    white-space: pre-wrap; /* Allow line breaks */
+    min-height: 60px; 
+    overflow: hidden; 
+    border: 1px solid #ced4da; 
+    padding: 5px; 
+    outline: none; 
+    resize: none; 
+    white-space: pre-wrap; 
+}
+*/
+
+
+.my_success_color {
+    background-color: #9fd7be;
 }

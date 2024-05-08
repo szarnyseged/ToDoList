@@ -3,23 +3,25 @@ dummy_cards = [
         "id" : 1,
         "title" : "dummy title1",
         "subtitle" : "dummy_subtitle",
-        "content_id" : 1
+        "done" : True
     },
     {
         "id" : 2,
         "title" : "dummy title2",
         "subtitle" : "dummy_subtitle",
-        "content_id" : 2
+        "done": False
     },
     {
         "id" : 3,
         "title" : "dummy title3",
-        "subtitle" : "dummy_subtitle"
+        "subtitle" : "dummy_subtitle",
+        "done": False
     },
     {
         "id" : 4,
         "title" : "dummy title",
-        "subtitle" : "dummy_subtitle"
+        "subtitle" : "dummy_subtitle",
+        "done": False
     }
 ]
 

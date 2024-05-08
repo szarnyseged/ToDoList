@@ -7,37 +7,52 @@
     <link rel="stylesheet" href="../../bootstrap-5.3.2-dist/css/bootstrap.css">
     -->
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='my_style.css') }}">
     <title>offline_todo</title>
 </head>
 <body style="background-color:#00a0e4;">
     <main>
-        <nav>
-
-        </nav>
+        {% include "navbar.html" %}
         <div class="container-fluid">
             <div class="row">
                 <div class="col-auto">
                     <div class="vstack DoneBar gap-2">
-
-                        <div class="card bg-secondary-subtle text-light m-3" style="max-width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title text-black">Card title</h5>
-                                <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat in ipsum hic officiis, a adipisci molestiae nostrum accusantium inventore ut.
-                                    </li>
-                                    <li class="list-group-item">
-                                        <input class="form-check-input me-1" type="checkbox" value="" id="secondCheckbox">
-                                        <label class="form-check-label" for="secondCheckbox">Some quick example text to build on the card title and make up the bulk of the card's content.</label>
-                                    </li>
-                                </ul>
-                                <a href="#" class="card-link">Add Line</a>
-                                <a href="#" class="card-link">Add Card</a>
-                                <a href="#" class="card-link done">Done</a>
-                            </div>
-                        </div>
+                        {% for card in ToDoCard %}
+                            {% if card.done %}
+                                <div class="card ToDoCard my_success_color text-light m-3" id="{{ card.id }}" style="max-width: 18rem;">
+                                    <div class="card-body">
+                                        <div class="modal-header">
+                                            <h5 class="card-title text-black">{{ card.title }}</h5>
+                                            <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#DeleteModal" aria-label="Close"></button>
+                                        </div>
+                                        <h6 class="card-subtitle mb-2 text-body-secondary">{{ card.subtitle }}</h6>
+                                        <ul class="list-group content_group">
+                                            {% for one_content in card.content %}
+                                                <li class="list-group-item" id="{{ one_content.id }}">
+                                                    <div class="row">
+                                                        <div class="col-2 align-self-center">
+                                                            {% if one_content.checkbox_on_off == True %}
+                                                                <input class="form-check-input me-1 fs-5" type="checkbox" value="" checked>
+                                                            {% else %}
+                                                                <input class="form-check-input me-1 fs-5" type="checkbox" value="">
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="col-10">
+                                                            <div class="contenteditable-div" contenteditable="False" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
+                                                                {{ one_content.content_text }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                        <div class="d-flex justify-content-center">
+                                            <button class="card-link DoneButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Not Done</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -52,97 +67,44 @@
                 <div class="col">
                     <div class="row">
                         <!--gpt-->
-                        <div class="card bg-secondary-subtle text-light m-3" style="max-width: 18rem;">
-                            <div class="card-body">
-                                <div class="modal-header">
-                                    <h5 class="card-title text-black">Card title</h5>
-                                    <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#DeleteModal" aria-label="Close"></button>
-                                </div>
-                                <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <div class="row">
-                                            <div class="col-2 align-self-center">
-                                                <input class="form-check-input me-1 fs-5" type="checkbox" value="">
-                                            </div>
-                                            <div class="col-10">
-                                                <div class="contenteditable-div" contenteditable="true" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
-                                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque ullam enim laudantium saepe culpa.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <div class="row">
-                                            <div class="col-2 align-self-center">
-                                                <input class="form-check-input me-1 fs-5" type="checkbox" value="">
-                                            </div>
-                                            <div class="col-10">
-                                                <div class="contenteditable-div" contenteditable="true" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div>
-                                    <button class="card-link AddLineButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Add Line</button>
-                                    <button class="card-link btn btn-primary btn-sm ps-2 pe-2 ms-1">Add Card</button>
-                                    <button class="card-link DoneButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Done</button>
-                                </div>
-
-                            </div>
-                        </div>
-                        <!--gpt-->
-
-                        <!--gpt-->
                         {% for card in ToDoCard %}
-                            
-                            <div class="card bg-secondary-subtle text-light m-3" id="{{ card.id }}" style="max-width: 18rem;">
-                                <div class="card-body">
-                                    <div class="modal-header">
-                                        <h5 class="card-title text-black">{{ card.title }}</h5>
-                                        <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#DeleteModal" aria-label="Close"></button>
-                                    </div>
-                                    <h6 class="card-subtitle mb-2 text-body-secondary">{{ card.subtitle }}</h6>
-                                    <ul class="list-group">
-                                        {% for one_content in card.content %}
-                                            <li class="list-group-item">
-                                                <div class="row">
-                                                    <div class="col-2 align-self-center">
-                                                        {% if one_content.checkbox_on_off == True %}
-                                                            <input class="form-check-input me-1 fs-5" type="checkbox" value="" checked>
-                                                        {% else %}
-                                                            <input class="form-check-input me-1 fs-5" type="checkbox" value="">
-                                                        {% endif %}
-                                                    </div>
-                                                    <div class="col-10">
-                                                        <div class="contenteditable-div" contenteditable="true" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
-                                                            {{ one_content.content_text }}
+                            {% if card.done == False %}
+                                <div class="card ToDoCard bg-secondary-subtle text-light m-3" id="{{ card.id }}" style="max-width: 18rem;">
+                                    <div class="card-body">
+                                        <div class="modal-header">
+                                            <h5 contenteditable="True" class="card-title text-black">{{ card.title }}</h5>
+                                            <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#DeleteModal" aria-label="Close"></button>
+                                        </div>
+                                        <h6 contenteditable="True" class="card-subtitle mb-2 text-body-secondary">{{ card.subtitle }}</h6>
+                                        <ul class="list-group content_group">
+                                            {% for one_content in card.content %}
+                                                <li class="list-group-item" id="{{ one_content.id }}">
+                                                    <div class="row">
+                                                        <div class="col-2 align-self-center">
+                                                            {% if one_content.checkbox_on_off == True %}
+                                                                <input class="form-check-input me-1 fs-5" type="checkbox" value="" checked>
+                                                            {% else %}
+                                                                <input class="form-check-input me-1 fs-5" type="checkbox" value="">
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="col-10">
+                                                            <div class="contenteditable-div" contenteditable="true" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
+                                                                {{ one_content.content_text }}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                        {% endfor %}
-                                        <li class="list-group-item">
-                                            <div class="row">
-                                                <div class="col-2 align-self-center">
-                                                    <input class="form-check-input me-1 fs-5" type="checkbox" value="">
-                                                </div>
-                                                <div class="col-10">
-                                                    <div class="contenteditable-div" contenteditable="true" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div>
-                                        <button class="card-link AddLineButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Add Line</button>
-                                        <button class="card-link btn btn-primary btn-sm ps-2 pe-2 ms-1">Add Card</button>
-                                        <button class="card-link DoneButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Done</button>
-                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                        <div>
+                                            <button class="card-link AddLineButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Add Line</button>
+                                            <button class="card-link btn btn-primary btn-sm ps-2 pe-2 ms-1">Add Card</button>
+                                            <button class="card-link DoneButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Done</button>
+                                        </div>
 
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
                         {% endfor %}
                         <!--gpt-->
                     </div>
@@ -165,7 +127,10 @@
                 
                     <div class="modal-footer">
                         <!-- data-bs-dismiss="modal" + function-->
-                        <button type="button" class="btn btn-danger">Confirm</button>
+                        <form action="">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Confirm</button>
+                        </form>
+                        
                     </div>
                 </div>
             </div>

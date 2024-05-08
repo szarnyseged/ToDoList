@@ -10,6 +10,7 @@ class ToDoCard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80))
     subtitle = db.Column(db.String(80))
+    done = db.Column(db.Boolean)
     # issue? relationship?
     content = db.relationship("ToDoContent", lazy=True, backref="content_obj")
 
