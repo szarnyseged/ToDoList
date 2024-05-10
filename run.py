@@ -6,6 +6,10 @@ if __name__ == "__main__":
 
 """
 to do:
+rework -> backend sends the cards data to js array. -> this array fills the DOM.
+update, add, delete on this array.
+then saving sends this array to backend.
+
 js -> done button, add line button could be removed. using only the add functions
 to create them (iterate), when the DOM loads.
 
