@@ -1,42 +1,4 @@
 
-// Done button
-document.addEventListener("DOMContentLoaded", function() {
-    // Find all "Done" buttons
-    var doneButtons = document.querySelectorAll('.card-link.DoneButton');
-
-    // Attach click event listener to each "Done" button
-    doneButtons.forEach(function(button) {
-        button.addEventListener('click', function(event) {
-            // Prevent default link behavior
-            event.preventDefault();
-            
-            // Find the parent card element (closest() -> moving/searching up in DOM)
-            var card = this.closest('.card');
-
-            // Move the card to the left vstack (DoneBar class) bar
-            // (querySelector() -> moving/searching down in DOM)
-            var vStack = document.querySelector('.DoneBar');
-            vStack.appendChild(card);
-
-            // Hide the "Done" button after moving the card
-            //button.style.display = 'none';
-            button.textContent = "Not Done";
-            // !!! the class is still DoneButton, this functionality still on it, even while its on the left side.
-
-            // bugcheck
-            console.log("done button bugcheck start");
-            console.log(card.id);
-            console.log(card.querySelector(".card-title").textContent);
-            console.log(card.querySelector(".card-subtitle").textContent);
-            console.log("done button bugcheck end");
-            
-
-            sendCardData(card);
-        });
-    });
-});
-
-
 // save button
 document.addEventListener("DOMContentLoaded", function() {
     // find save button
@@ -54,6 +16,279 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+
+// add card button
+document.addEventListener("DOMContentLoaded", function() {
+    var addCardButton = document.getElementById("add_card")
+
+    // attach click event listener
+    addCardButton.addEventListener("click", function(event) {
+        event.preventDefault();
+        var ToDoBar = document.querySelector(".ToDoBar").querySelector(".row");
+
+        // get an ID from db.
+        var route = "add_card";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", route, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Parse XML response
+                    var newId = xhr.responseText;
+                    newCard = createCard(newId);
+                    addDoneButtonListener(newCard);
+                    addAddLineButtonListener(newCard);
+                } else {
+                    console.error('Request failed with status:', xhr.status);
+                };
+            };
+        };
+        xhr.send();
+
+        function createCard(id) {
+            var newCard = document.createElement("div");
+            newCard.id = id;
+            newCard.classList.add("card", "ToDoCard", "bg-secondary-subtle", "text-light", "m-3");
+            //"card ToDoCard bg-secondary-subtle text-light m-3"
+            newCard.innerHTML = `
+                <div class="card-body">
+                    <div class="modal-header">
+                        <h5 contenteditable="True" class="card-title text-black">Title</h5>
+                        <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#DeleteModal" aria-label="Close"></button>
+                    </div>
+                    <h6 contenteditable="True" class="card-subtitle mb-2 text-body-secondary">Subtitle</h6>
+                    <ul class="list-group content_group">
+                    </ul>
+                    <div class="d-flex justify-content-evenly">
+                        <button class="card-link AddLineButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Add Line</button>
+                        <button class="card-link DoneButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Done</button>
+                    </div>
+                </div>
+                `
+            ToDoBar.appendChild(newCard);
+            return newCard;
+        };
+    });
+});
+
+
+// Done button
+document.addEventListener("DOMContentLoaded", function() {
+    // Find all "Done" buttons
+    var doneButtons = document.querySelectorAll('.card-link.DoneButton');
+    // Attach click event listener to each "Done" button
+    doneButtons.forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            // Prevent default link behavior
+            event.preventDefault();
+            
+            // Find the parent card element (closest() -> moving/searching up in DOM)
+            var card = this.closest('.card');
+            var route = "/done_button";
+
+            if (card.closest(".ToDoBar")) {
+                // Move the card to the left vstack (DoneBar class) bar
+                // (querySelector() -> moving/searching down in DOM)
+                var vStack = document.querySelector('.DoneBar');
+                vStack.appendChild(card);
+
+                //button.style.display = 'none';
+                // !!! the class is still DoneButton, this functionality still on it, even while its on the left side.
+                // change style
+                button.textContent = "Not Done";
+                card.querySelector(".AddLineButton").style.display = "none";
+                card.classList.remove("bg-secondary-subtle");
+                card.classList.add("my_success_color");
+                card.querySelector(".card-title").contentEditable="false";
+                card.querySelector(".card-subtitle").contentEditable="false";
+            } else if (card.closest(".DoneBar")) {
+                var ToDoBar = document.querySelector(".ToDoBar");
+                ToDoBar.querySelector(".row").appendChild(card);
+
+                // change style
+                button.textContent = "Done";
+                card.querySelector(".AddLineButton").style.display = "inline-block";
+                card.classList.add("bg-secondary-subtle");
+                card.classList.remove("my_success_color");
+                card.querySelector(".card-title").contentEditable="true";
+                card.querySelector(".card-subtitle").contentEditable="true";
+            };
+
+            // bugcheck
+            console.log("done button bugcheck start");
+            console.log(card.id);
+            console.log(card.querySelector(".card-title").textContent);
+            console.log(card.querySelector(".card-subtitle").textContent);
+            console.log("done button bugcheck end");
+        });
+    });
+});
+
+
+// Add line button
+document.addEventListener("DOMContentLoaded", function() {
+    // find all "AddLineButtons"
+    var AddLineButtons = document.querySelectorAll(".card-link.AddLineButton");
+
+    // attach click event listener
+    AddLineButtons.forEach(function(button) {
+        button.addEventListener("click", function(event) {
+            // prevent default link behavior
+            // this is used to prevent eg.: <a> navigation to an url, OR submit form button functionality,
+            // ensuring that only this custom behavior will be executed 
+            event.preventDefault();
+
+            // Find the parent list-group element
+            var contentGroup = this.closest(".card-body").querySelector(".content_group");
+
+            // get an ID from db.
+            var route = "add_line";
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", route, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Parse XML response
+                        var newId = xhr.responseText;
+
+                        // create new list-group-item
+                        var newItem = document.createElement("li");
+                        newItem.id = newId;
+                        newItem.classList.add("list-group-item");
+
+                        // create inner html
+                        newItem.innerHTML = `
+                            <div class="row">
+                                <div class="col-2 align-self-center">
+                                    <input class="form-check-input me-1 fs-5" type="checkbox" value="">
+                                </div>
+                                <div class="col-10">
+                                    <div class="contenteditable-div" contenteditable="true" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
+                                    </div>
+                                </div>
+                            </div>`;
+                        contentGroup.appendChild(newItem);
+
+                        console.log("gotten_id: ", newId)
+                    } else {
+                        console.error('Request failed with status:', xhr.status);
+                    }
+                }
+            };
+            xhr.send();
+        });
+    });
+});
+
+
+function addDoneButtonListener(card) {
+    var doneButton = card.querySelector('.DoneButton');
+
+    doneButton.addEventListener('click', function(event) {
+        // Prevent default link behavior
+        event.preventDefault();
+        
+        if (card.closest(".ToDoBar")) {
+            // Move the card to the left vstack (DoneBar class) bar
+            // (querySelector() -> moving/searching down in DOM)
+            var vStack = document.querySelector('.DoneBar');
+            vStack.appendChild(card);
+
+            //button.style.display = 'none';
+            // !!! the class is still DoneButton, this functionality still on it, even while its on the left side.
+            // change style
+            doneButton.textContent = "Not Done";
+            card.querySelector(".AddLineButton").style.display = "none";
+            card.classList.remove("bg-secondary-subtle");
+            card.classList.add("my_success_color");
+            card.querySelector(".card-title").contentEditable="false";
+            card.querySelector(".card-subtitle").contentEditable="false";
+        } else if (card.closest(".DoneBar")) {
+            var ToDoBar = document.querySelector(".ToDoBar");
+            ToDoBar.querySelector(".row").appendChild(card);
+
+            // change style
+            doneButton.textContent = "Done";
+            card.querySelector(".AddLineButton").style.display = "inline-block";
+            card.classList.add("bg-secondary-subtle");
+            card.classList.remove("my_success_color");
+            card.querySelector(".card-title").contentEditable="true";
+            card.querySelector(".card-subtitle").contentEditable="true";
+        };
+
+        // bugcheck
+        console.log("done button bugcheck start");
+        console.log(card.id);
+        console.log(card.querySelector(".card-title").textContent);
+        console.log(card.querySelector(".card-subtitle").textContent);
+        console.log("done button bugcheck end");
+    });
+    console.log("done button listener added to card id: ", card.id);
+};
+
+
+function addAddLineButtonListener(card) {
+    var addLineButton = card.querySelector('.AddLineButton');
+
+    addLineButton.addEventListener("click", function(event) {
+        event.preventDefault()
+        var contentGroup = card.querySelector(".content_group");
+
+        // get an ID from db.
+        var route = "add_line";
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", route, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Parse XML response
+                    var newId = xhr.responseText;
+                    createListItem(newId)
+                } else {
+                    console.error('Request failed with status:', xhr.status);
+                }
+            }
+        };
+        xhr.send();
+
+        function createListItem(id) {
+            var newItem = document.createElement("li");
+            newItem.id = id;
+            newItem.classList.add("list-group-item");
+
+            // create inner html
+            newItem.innerHTML = `
+                <div class="row">
+                    <div class="col-2 align-self-center">
+                        <input class="form-check-input me-1 fs-5" type="checkbox" value="">
+                    </div>
+                    <div class="col-10">
+                        <div class="contenteditable-div" contenteditable="true" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
+                        </div>
+                    </div>
+                </div>`;
+            contentGroup.appendChild(newItem);
+        };
+    });
+    console.log("add line button listener added to card id: ", card.id);
+};
+
+
+function makeTimestamp() {
+    now = new Date()
+
+    // Format the date and time into a string similar to Python's datetime.now() format
+    var timestamp = now.getFullYear() + "-" +
+                (now.getMonth() + 1).toString().padStart(2, '0') + "-" +
+                now.getDate().toString().padStart(2, '0') + " " +
+                now.getHours().toString().padStart(2, '0') + ":" +
+                now.getMinutes().toString().padStart(2, '0') + ":" +
+                now.getSeconds().toString().padStart(2, '0');
+    console.log(timestamp);
+    return timestamp;
+};
 
 
 function sendCardData(card, route) {
@@ -88,6 +323,7 @@ function sendCardData(card, route) {
     // build json object
     var payload = {
         card_id: card.id,
+        is_done: "_",
         card_content:
         {
             title: card.querySelector(".card-title").textContent,
@@ -105,51 +341,16 @@ function sendCardData(card, route) {
         )
     });
 
+    if (card.closest(".DoneBar")) {
+        payload.is_done = true
+    } else {
+        payload.is_done = false
+    };
+
     // bugcheck
     console.log("sendCardData check json \n", JSON.stringify(payload));
 
     // Send json
-    xhr.send(JSON.stringify(payload)); 
-}
+    xhr.send(JSON.stringify(payload));
+};
 
-
-// Add line button
-document.addEventListener("DOMContentLoaded", function() {
-    // find all "AddLineButtons"
-    var AddLineButtons = document.querySelectorAll(".card-link.AddLineButton");
-
-    // attach click event listener
-    AddLineButtons.forEach(function(button) {
-        button.addEventListener("click", function(event) {
-            // prevent default link behavior
-            // this is used to prevent eg.: <a> navigation to an url, OR submit form button functionality,
-            // ensuring that only this custom behavior will be executed 
-            event.preventDefault();
-
-            // Find the parent list-group element
-            var listGroup = this.closest(".card-body").querySelector(".list-group");
-            console.log(listGroup);
-
-            // create new list-group-item
-            var newItem = document.createElement("li");
-            newItem.classList.add("list-group-item");
-            
-            
-            // !!!!! bug id="one_content.id" missing on new li.
-            // -> 
-            // create inner html
-            newItem.innerHTML = `
-            <div class="row">
-                <div class="col-2 align-self-center">
-                    <input class="form-check-input me-1 fs-5" type="checkbox" value="">
-                </div>
-                <div class="col-10">
-                    <div class="contenteditable-div" contenteditable="true" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
-                    </div>
-                </div>
-            </div>`;
-
-            listGroup.appendChild(newItem);
-        });
-    });
-});

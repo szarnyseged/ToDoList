@@ -19,7 +19,7 @@
                     <div class="vstack DoneBar gap-2">
                         {% for card in ToDoCard %}
                             {% if card.done %}
-                                <div class="card ToDoCard my_success_color text-light m-3" id="{{ card.id }}" style="max-width: 18rem;">
+                                <div class="card ToDoCard my_success_color text-light m-3" id="{{ card.id }}">
                                     <div class="card-body">
                                         <div class="modal-header">
                                             <h5 class="card-title text-black">{{ card.title }}</h5>
@@ -46,7 +46,8 @@
                                                 </li>
                                             {% endfor %}
                                         </ul>
-                                        <div class="d-flex justify-content-center">
+                                        <div class="d-flex justify-content-evenly">
+                                            <button class="card-link AddLineButton btn btn-primary btn-sm ps-2 pe-2 ms-1" style="display: none;">Add Line</button>
                                             <button class="card-link DoneButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Not Done</button>
                                         </div>
                                     </div>
@@ -64,12 +65,12 @@
 
                 <div class="vr col-1"></div>
                 
-                <div class="col">
+                <div class="col ToDoBar">
                     <div class="row">
                         <!--gpt-->
                         {% for card in ToDoCard %}
                             {% if card.done == False %}
-                                <div class="card ToDoCard bg-secondary-subtle text-light m-3" id="{{ card.id }}" style="max-width: 18rem;">
+                                <div class="card ToDoCard bg-secondary-subtle text-light m-3" id="{{ card.id }}">
                                     <div class="card-body">
                                         <div class="modal-header">
                                             <h5 contenteditable="True" class="card-title text-black">{{ card.title }}</h5>
@@ -96,9 +97,8 @@
                                                 </li>
                                             {% endfor %}
                                         </ul>
-                                        <div>
+                                        <div class="d-flex justify-content-evenly">
                                             <button class="card-link AddLineButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Add Line</button>
-                                            <button class="card-link btn btn-primary btn-sm ps-2 pe-2 ms-1">Add Card</button>
                                             <button class="card-link DoneButton btn btn-primary btn-sm ps-2 pe-2 ms-1">Done</button>
                                         </div>
 

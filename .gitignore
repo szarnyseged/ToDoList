@@ -1,2 +1,5 @@
 .venv
 content/__pycache__
+__pycache__
+test.html
+test.py

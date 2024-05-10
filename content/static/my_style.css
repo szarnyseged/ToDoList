@@ -18,3 +18,8 @@
 .my_success_color {
     background-color: #9fd7be;
 }
+
+.ToDoCard {
+    max-width: 18rem;
+}
+
