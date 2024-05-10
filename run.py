@@ -6,12 +6,13 @@ if __name__ == "__main__":
 
 """
 to do:
-saving the done state is not handled in the /save_all route. 
-nor being sent any info about it trough js json.
-/done_button route session is lost before saving button being clicked.
+js -> done button, add line button could be removed. using only the add functions
+to create them (iterate), when the DOM loads.
 
-add line button,
+js make timestamp function is not in use ->
+handling the timestamp in backend doesnt work well, because the saving happens on all cards "at once".
 
-add card button to the navbar
+create real db instead of memory ->
+(load db option in frontend)
 
 """
