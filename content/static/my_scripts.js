@@ -8,12 +8,34 @@ document.addEventListener("DOMContentLoaded", function() {
     saveButton.addEventListener("click", function(event) {
         event.preventDefault();
 
-        // send all card data
-        // one-by-one many json sending approach. not ideal
+        var fullJson = {
+            cards: []
+        };
+
         allCard = document.querySelectorAll(".ToDoCard");
-        allCard.forEach(function(item) {
-            sendCardData(item, route)
+        allCard.forEach(function(oneCard) {
+            fullJson.cards.push(prepCardData(oneCard))
         });
+
+        // bugcheck
+        console.log("full json: ", JSON.stringify(fullJson));
+        makePostRequest(route, fullJson);
+
+        function makePostRequest(route, payload) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", route, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log("Request successful");
+                    } else {
+                        console.error("Request failed");
+                    }
+                };
+            };
+        xhr.send(JSON.stringify(payload));
+        };
     });
 });
 
@@ -27,28 +49,15 @@ document.addEventListener("DOMContentLoaded", function() {
         event.preventDefault();
         var ToDoBar = document.querySelector(".ToDoBar").querySelector(".row");
 
-        // get an ID from db.
-        var route = "add_card";
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", route, true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    // Parse XML response
-                    var newId = xhr.responseText;
-                    newCard = createCard(newId);
-                    addDoneButtonListener(newCard);
-                    addAddLineButtonListener(newCard);
-                } else {
-                    console.error('Request failed with status:', xhr.status);
-                };
-            };
-        };
-        xhr.send();
 
-        function createCard(id) {
+        newCard = createCard();
+        addDoneButtonListener(newCard);
+        addAddLineButtonListener(newCard);
+
+        function createCard() {
             var newCard = document.createElement("div");
-            newCard.id = id;
+            // the card got no id -> assign later with backend
+            newCard.id = "_";
             newCard.classList.add("card", "ToDoCard", "bg-secondary-subtle", "text-light", "m-3");
             //"card ToDoCard bg-secondary-subtle text-light m-3"
             newCard.innerHTML = `
@@ -131,54 +140,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // find all "AddLineButtons"
     var AddLineButtons = document.querySelectorAll(".card-link.AddLineButton");
 
-    // attach click event listener
     AddLineButtons.forEach(function(button) {
-        button.addEventListener("click", function(event) {
-            // prevent default link behavior
-            // this is used to prevent eg.: <a> navigation to an url, OR submit form button functionality,
-            // ensuring that only this custom behavior will be executed 
-            event.preventDefault();
-
-            // Find the parent list-group element
-            var contentGroup = this.closest(".card-body").querySelector(".content_group");
-
-            // get an ID from db.
-            var route = "add_line";
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", route, true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        // Parse XML response
-                        var newId = xhr.responseText;
-
-                        // create new list-group-item
-                        var newItem = document.createElement("li");
-                        newItem.id = newId;
-                        newItem.classList.add("list-group-item");
-
-                        // create inner html
-                        newItem.innerHTML = `
-                            <div class="row">
-                                <div class="col-2 align-self-center">
-                                    <input class="form-check-input me-1 fs-5" type="checkbox" value="">
-                                </div>
-                                <div class="col-10">
-                                    <div class="contenteditable-div" contenteditable="true" aria-multiline="true" role="textbox" aria-placeholder="Enter text here">
-                                    </div>
-                                </div>
-                            </div>`;
-                        contentGroup.appendChild(newItem);
-
-                        console.log("gotten_id: ", newId)
-                    } else {
-                        console.error('Request failed with status:', xhr.status);
-                    }
-                }
-            };
-            xhr.send();
-        });
+        addAddLineButtonListener(button.closest(".card"))
     });
 });
 
@@ -235,27 +198,13 @@ function addAddLineButtonListener(card) {
     addLineButton.addEventListener("click", function(event) {
         event.preventDefault()
         var contentGroup = card.querySelector(".content_group");
+        createListItem();
 
-        // get an ID from db.
-        var route = "add_line";
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", route, true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    // Parse XML response
-                    var newId = xhr.responseText;
-                    createListItem(newId)
-                } else {
-                    console.error('Request failed with status:', xhr.status);
-                }
-            }
-        };
-        xhr.send();
-
-        function createListItem(id) {
+        
+        function createListItem() {
             var newItem = document.createElement("li");
-            newItem.id = id;
+            // the content got no id -> assign later with backend
+            newItem.id = "_";
             newItem.classList.add("list-group-item");
 
             // create inner html
@@ -347,6 +296,7 @@ function sendCardData(card, route) {
         payload.is_done = false
     };
 
+
     // bugcheck
     console.log("sendCardData check json \n", JSON.stringify(payload));
 
@@ -354,3 +304,53 @@ function sendCardData(card, route) {
     xhr.send(JSON.stringify(payload));
 };
 
+
+function prepCardData(card) {
+    // get the content-editable div contents
+    var listItems = card.querySelector(".list-group.content_group").querySelectorAll(".list-group-item");
+    //console.log(card.querySelector(".list-group.content_group").querySelectorAll(".list-group-item"));
+    var allContent = [];
+    listItems.forEach(function(item) {
+        var pairs = []
+        pairs.push(item.id)
+        pairs.push(item.querySelector("input").checked)
+        pairs.push(item.querySelector(".contenteditable-div").textContent)
+        allContent.push(pairs)
+    });
+
+    // build json object
+    var payload = {
+        card_id: card.id,
+        is_done: "_",
+        card_content:
+        {
+            title: card.querySelector(".card-title").textContent,
+            subtitle: card.querySelector(".card-subtitle").textContent,
+            content: []
+        }
+    };
+
+    allContent.forEach(function(item) {
+        payload.card_content.content.push({
+            content_id: item[0],
+            is_checked: item[1],
+            text: item[2]
+            }
+        )
+    });
+
+    if (card.closest(".DoneBar")) {
+        payload.is_done = true
+    } else {
+        payload.is_done = false
+    };
+
+    // bugcheck
+    console.log("prepCardData check json \n", JSON.stringify(payload));
+    return payload;
+};
+
+function deleteCard() {
+    modal = document.getElementById("DeleteModal");
+    
+};

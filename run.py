@@ -6,11 +6,15 @@ if __name__ == "__main__":
 
 """
 to do:
+
+bug: creating a new card, and adding adding lines to it -> then save. -> lines are not saved.
+problem on backend at saving for sure.
+
 rework -> backend sends the cards data to js array. -> this array fills the DOM.
 update, add, delete on this array.
 then saving sends this array to backend.
 
-js -> done button, add line button could be removed. using only the add functions
+js -> done button could be removed. using only the add functions
 to create them (iterate), when the DOM loads.
 
 js make timestamp function is not in use ->

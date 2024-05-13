@@ -2,12 +2,6 @@ from content import db
 from content import datetime
 
 
-
-"""
-maybe better solution would be using JSON instead of db.
-
-"""
-
 class ToDoCard(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80))
