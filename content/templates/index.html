@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='my_style.css') }}">
     <title>offline_todo</title>
 </head>
-<body style="background-color:#00a0e4;">
+<body>
     <main>
         {% include "navbar.html" %}
         <div class="container-fluid">
@@ -57,17 +57,14 @@
                     </div>
                 </div>
 
-
                 <!-- Vertical rule -->
                 <!--
                 <div class="col-1  d-none d-md-block border-end"></div>
                 -->
-
                 <div class="vr col-1"></div>
                 
                 <div class="col ToDoBar">
                     <div class="row">
-                        <!--gpt-->
                         {% for card in ToDoCard %}
                             {% if card.done == False %}
                                 <div class="card ToDoCard bg-secondary-subtle text-light m-3" id="{{ card.id }}">
@@ -106,7 +103,6 @@
                                 </div>
                             {% endif %}
                         {% endfor %}
-                        <!--gpt-->
                     </div>
                 </div>
             </div>
@@ -135,17 +131,11 @@
                 </div>
             </div>
         </div>
-  
-
-
     </main>
     <script src="{{ url_for('static', filename='bootstrap.js') }}"></script>
     <script src="{{ url_for('static', filename='my_scripts.js')}}"></script>
     <!-- manual path
     <script src="../static/my_scripts.js"></script>
     -->
-
-
-    
 </body>
 </html>
