@@ -1,7 +1,29 @@
 <nav class="navbar bg-dark bg-gradient">
     <form class="container-fluid justify-content-center">
-      <button class="btn btn-success m-3 me-5 btn-lg" type="button" id="save_all">Save</button>
+      <button class="btn btn-success m-3 me-5 btn-lg" type="button" id="save_all" data-bs-toggle="modal" data-bs-target="#SaveModal" aria-label="Close">Save</button>
       <button class="btn btn-primary m-3 me-5 btn-lg" type="button" id="add_card">Add Card</button>
     </form>
+
+    <!-- Modal -->
+    <div class="modal fade" id="SaveModal" tabindex="-1" aria-labelledby="SaveModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="SaveModalLabel">Save</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Save all"></button>
+              </div>
+              <div class="modal-body">
+                  <p>Warning! Saving will overwrite current file. Not reversible. </p>
+              </div>
+          
+              <div class="modal-footer">
+                  <!-- data-bs-dismiss="modal" + function-->
+                  <form action="">
+                      <button id="ConfirmSave" type="button" class="btn btn-success" data-bs-dismiss="modal">Confirm</button>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
 </nav>
 

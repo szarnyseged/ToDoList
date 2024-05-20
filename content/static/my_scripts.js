@@ -2,7 +2,7 @@
 // save button
 document.addEventListener("DOMContentLoaded", function() {
     // find save button
-    var saveButton = document.getElementById("save_all");
+    var saveButton = document.getElementById("ConfirmSave");
     var route = "/save_all";
 
     saveButton.addEventListener("click", function(event) {
@@ -53,6 +53,8 @@ document.addEventListener("DOMContentLoaded", function() {
         newCard = createCard();
         addDoneButtonListener(newCard);
         addAddLineButtonListener(newCard);
+        addDeleteButtonListener(newCard);
+        confirmDeleteListener()
 
         function createCard() {
             var newCard = document.createElement("div");
@@ -64,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div class="card-body">
                     <div class="modal-header">
                         <h5 contenteditable="True" class="card-title text-black">Title</h5>
-                        <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#DeleteModal" aria-label="Close"></button>
+                        <button type="button" class="btn-close DeleteButton" data-bs-toggle="modal" data-bs-target="#DeleteModal" aria-label="Close"></button>
                     </div>
                     <h6 contenteditable="True" class="card-subtitle mb-2 text-body-secondary">Subtitle</h6>
                     <ul class="list-group content_group">
@@ -82,65 +84,16 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-// Done button
+// add button listeners
 document.addEventListener("DOMContentLoaded", function() {
-    // Find all "Done" buttons
-    var doneButtons = document.querySelectorAll('.card-link.DoneButton');
-    // Attach click event listener to each "Done" button
+    var addLineButtons = document.querySelectorAll(".card-link.AddLineButton");
+    var doneButtons = document.querySelectorAll(".DoneButton");
+
     doneButtons.forEach(function(button) {
-        button.addEventListener('click', function(event) {
-            // Prevent default link behavior
-            event.preventDefault();
-            
-            // Find the parent card element (closest() -> moving/searching up in DOM)
-            var card = this.closest('.card');
-            var route = "/done_button";
-
-            if (card.closest(".ToDoBar")) {
-                // Move the card to the left vstack (DoneBar class) bar
-                // (querySelector() -> moving/searching down in DOM)
-                var vStack = document.querySelector('.DoneBar');
-                vStack.appendChild(card);
-
-                //button.style.display = 'none';
-                // !!! the class is still DoneButton, this functionality still on it, even while its on the left side.
-                // change style
-                button.textContent = "Not Done";
-                card.querySelector(".AddLineButton").style.display = "none";
-                card.classList.remove("bg-secondary-subtle");
-                card.classList.add("my_success_color");
-                card.querySelector(".card-title").contentEditable="false";
-                card.querySelector(".card-subtitle").contentEditable="false";
-            } else if (card.closest(".DoneBar")) {
-                var ToDoBar = document.querySelector(".ToDoBar");
-                ToDoBar.querySelector(".row").appendChild(card);
-
-                // change style
-                button.textContent = "Done";
-                card.querySelector(".AddLineButton").style.display = "inline-block";
-                card.classList.add("bg-secondary-subtle");
-                card.classList.remove("my_success_color");
-                card.querySelector(".card-title").contentEditable="true";
-                card.querySelector(".card-subtitle").contentEditable="true";
-            };
-
-            // bugcheck
-            console.log("done button bugcheck start");
-            console.log(card.id);
-            console.log(card.querySelector(".card-title").textContent);
-            console.log(card.querySelector(".card-subtitle").textContent);
-            console.log("done button bugcheck end");
-        });
+        addDoneButtonListener(button.closest(".card"))
     });
-});
 
-
-// Add line button
-document.addEventListener("DOMContentLoaded", function() {
-    // find all "AddLineButtons"
-    var AddLineButtons = document.querySelectorAll(".card-link.AddLineButton");
-
-    AddLineButtons.forEach(function(button) {
+    addLineButtons.forEach(function(button) {
         addAddLineButtonListener(button.closest(".card"))
     });
 });
@@ -224,6 +177,28 @@ function addAddLineButtonListener(card) {
     console.log("add line button listener added to card id: ", card.id);
 };
 
+///
+var cardToDelete = null;
+function addDeleteButtonListener(card) {
+    var deleteButton = card.querySelector(".DeleteButton");
+
+    deleteButton.addEventListener("click", function(event) {
+        cardToDelete = card;
+        console.log(cardToDelete)
+    });
+};
+
+
+function confirmDeleteListener() {
+    var confirm = document.getElementById("confirm-delete")
+    confirm.addEventListener("click", function(event){
+        if (cardToDelete) {
+            cardToDelete.parentNode.removeChild(cardToDelete);
+            cardToDelete = null;
+        };
+    });
+};
+///
 
 function makeTimestamp() {
     now = new Date()
@@ -350,7 +325,7 @@ function prepCardData(card) {
     return payload;
 };
 
-function deleteCard() {
-    modal = document.getElementById("DeleteModal");
-    
-};
+
+
+
+

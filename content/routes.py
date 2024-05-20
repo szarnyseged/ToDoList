@@ -55,6 +55,8 @@ def save():
         current_card_obj.subtitle = card["card_content"]["subtitle"]
         # use js for date later
         current_card_obj.last_modified = datetime.now()
+        db.session.add(current_card_obj)
+        db.session.commit()
 
         # must commit here, because cannot add card content to the card which is not exists before.
 
@@ -71,8 +73,7 @@ def save():
             current_content_obj.content_text = one_content["text"]
             current_content_obj.card_id = current_card_obj.id
             db.session.add(current_content_obj)
-        db.session.add(current_card_obj)
-    db.session.commit()
+        db.session.commit()
 
     return redirect(url_for("home"))
 
