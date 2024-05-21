@@ -1,13 +1,13 @@
 
 // save button
 document.addEventListener("DOMContentLoaded", function() {
-    var saveButton = document.getElementById("ConfirmSave");
-    var route = "/save_all";
+    let saveButton = document.getElementById("ConfirmSave");
+    let route = "/tasks";
 
     saveButton.addEventListener("click", function(event) {
         event.preventDefault();
 
-        var fullJson = {
+        let fullJson = {
             cards: []
         };
 
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
         makePostRequest(route, fullJson);
 
         function makePostRequest(route, payload) {
-            var xhr = new XMLHttpRequest();
+            let xhr = new XMLHttpRequest();
             xhr.open("POST", route, true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onreadystatechange = function () {
@@ -41,11 +41,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // add card button
 document.addEventListener("DOMContentLoaded", function() {
-    var addCardButton = document.getElementById("add_card")
+    let addCardButton = document.getElementById("add_card")
 
     addCardButton.addEventListener("click", function(event) {
         event.preventDefault();
-        var ToDoBar = document.querySelector(".ToDoBar").querySelector(".row");
+        let ToDoBar = document.querySelector(".ToDoBar").querySelector(".row");
 
         newCard = createCard();
         addDoneButtonListener(newCard);
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
         confirmDeleteListener()
 
         function createCard() {
-            var newCard = document.createElement("div");
+            let newCard = document.createElement("div");
             // the card got no id -> assign later with backend
             newCard.id = "_";
             newCard.classList.add("card", "ToDoCard", "bg-secondary-subtle", "text-light", "m-3");
@@ -82,8 +82,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // load button listeners
 document.addEventListener("DOMContentLoaded", function() {
-    var addLineButtons = document.querySelectorAll(".card-link.AddLineButton");
-    var doneButtons = document.querySelectorAll(".DoneButton");
+    let addLineButtons = document.querySelectorAll(".card-link.AddLineButton");
+    let doneButtons = document.querySelectorAll(".DoneButton");
 
     doneButtons.forEach(function(button) {
         addDoneButtonListener(button.closest(".card"))
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 function addDoneButtonListener(card) {
-    var doneButton = card.querySelector('.DoneButton');
+    let doneButton = card.querySelector('.DoneButton');
 
     doneButton.addEventListener('click', function(event) {
         // Prevent default link behavior
@@ -106,7 +106,7 @@ function addDoneButtonListener(card) {
             // Move the card to the left vstack (DoneBar class) bar
             // (querySelector() -> moving/searching down in DOM)
             // (closest() -> moving/searching up in DOM)
-            var vStack = document.querySelector('.DoneBar');
+            let vStack = document.querySelector('.DoneBar');
             vStack.appendChild(card);
 
             // !!! the class is still DoneButton, this functionality still on it, even while its on the left side.
@@ -119,7 +119,7 @@ function addDoneButtonListener(card) {
             card.querySelector(".card-subtitle").contentEditable="false";
         } else if (card.closest(".DoneBar")) {
             // Move the card to the right (ToDoBar class) bar
-            var ToDoBar = document.querySelector(".ToDoBar");
+            let ToDoBar = document.querySelector(".ToDoBar");
             ToDoBar.querySelector(".row").appendChild(card);
 
             // change style
@@ -136,16 +136,16 @@ function addDoneButtonListener(card) {
 
 
 function addAddLineButtonListener(card) {
-    var addLineButton = card.querySelector('.AddLineButton');
+    let addLineButton = card.querySelector('.AddLineButton');
 
     addLineButton.addEventListener("click", function(event) {
         event.preventDefault()
-        var contentGroup = card.querySelector(".content_group");
+        let contentGroup = card.querySelector(".content_group");
         createListItem();
 
         
         function createListItem() {
-            var newItem = document.createElement("li");
+            let newItem = document.createElement("li");
             // the content got no id -> assign later with backend
             newItem.id = "_";
             newItem.classList.add("list-group-item");
@@ -170,7 +170,7 @@ function addAddLineButtonListener(card) {
 
 var cardToDelete = null;
 function addDeleteButtonListener(card) {
-    var deleteButton = card.querySelector(".DeleteButton");
+    let deleteButton = card.querySelector(".DeleteButton");
 
     deleteButton.addEventListener("click", function(event) {
         cardToDelete = card;
@@ -180,7 +180,7 @@ function addDeleteButtonListener(card) {
 
 
 function confirmDeleteListener() {
-    var confirm = document.getElementById("confirm-delete")
+    let confirm = document.getElementById("confirm-delete")
     confirm.addEventListener("click", function(event){
         if (cardToDelete) {
             cardToDelete.parentNode.removeChild(cardToDelete);
@@ -194,7 +194,7 @@ function makeTimestamp() {
     now = new Date()
 
     // Format the date and time into a string similar to Python's datetime.now() format
-    var timestamp = now.getFullYear() + "-" +
+    let timestamp = now.getFullYear() + "-" +
                 (now.getMonth() + 1).toString().padStart(2, '0') + "-" +
                 now.getDate().toString().padStart(2, '0') + " " +
                 now.getHours().toString().padStart(2, '0') + ":" +
@@ -207,9 +207,9 @@ function makeTimestamp() {
 
 function prepCardData(card) {
     // get the content-editable div contents
-    var listItems = card.querySelector(".list-group.content_group").querySelectorAll(".list-group-item");
+    let listItems = card.querySelector(".list-group.content_group").querySelectorAll(".list-group-item");
     //console.log(card.querySelector(".list-group.content_group").querySelectorAll(".list-group-item"));
-    var allContent = [];
+    let allContent = [];
     listItems.forEach(function(item) {
         var pairs = []
         pairs.push(item.id)
@@ -219,7 +219,7 @@ function prepCardData(card) {
     });
 
     // build json object
-    var payload = {
+    let payload = {
         card_id: card.id,
         is_done: "_",
         card_content:

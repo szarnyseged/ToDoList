@@ -38,7 +38,7 @@ def home():
     return render_template("index.html", ToDoCard=cards_list)
 
 
-@app.route("/save_all", methods=["POST"])
+@app.route("/tasks", methods=["POST"])
 def save():
     json_data = request.get_json()
     json_data = json_data["cards"]
