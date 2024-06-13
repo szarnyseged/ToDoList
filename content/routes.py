@@ -6,6 +6,7 @@ from content import datetime
 
 
 # create db
+
 with app.app_context():
     db.create_all()
     for card in dummy_cards:
@@ -16,12 +17,14 @@ with app.app_context():
         db.session.add(content_obj)
     db.session.commit()
 
+
     # bugcheck
     print(ToDoCard.query.all())
     print("")
     print(ToDoContent.query.all())
     check_obj = ToDoCard.query.filter_by(id=2).first()
     print("\n", "bugcheck: db create ", check_obj.content)
+
 
 
 
