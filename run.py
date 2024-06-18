@@ -23,5 +23,46 @@ handling the timestamp in backend doesnt work well, because the saving happens o
 
 create real db instead of memory ->
 (load db option in frontend)
+use the create_db.py to create dummy db manually.
+
+dynamic db change: flask-sqlalchemy doesnt support that.
+https://stackoverflow.com/questions/63827071/flask-sqlalchemy-dynamic-connection-to-different-databases
+
+    #gpt -> db.engine error -> there is no setter for engine
+    from flask import Flask
+    from flask_sqlalchemy import SQLAlchemy
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+
+
+    @app.route('/reconfigure_db/<string:new_database_uri>')
+    def reconfigure_db(new_database_uri):
+        Session = reconfigure_database(app, new_database_uri)
+        return "Database reconfigured successfully!"
+
+
+    def reconfigure_database(app, new_database_uri):
+        # Create a new engine
+        new_engine = create_engine(f"sqlite:///{new_database_uri}")
+        
+        # Create a new session factory
+        Session = sessionmaker(bind=new_engine)
+        
+        # Reconfigure the SQLAlchemy object to use the new engine
+        db.engine.dispose()  # Dispose the previous engine
+        db.engine = new_engine
+        db.session.remove()  # Remove the existing session
+        db.session.configure(bind=new_engine)  # Rebind session to the new engine
+        
+        # Update the app config
+        app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{new_database_uri}"
+        
+        # If you use scoped_session, reconfigure it as well
+        if hasattr(db, 'scoped_session'):
+            db.scoped_session.remove()
+            db.scoped_session.configure(bind=new_engine)
+        
+        return Session
+
 
 """

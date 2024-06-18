@@ -4,3 +4,5 @@ __pycache__
 test.html
 test.py
 bootstrap-5.3.2-dist
+db/first.db
+db/second.db

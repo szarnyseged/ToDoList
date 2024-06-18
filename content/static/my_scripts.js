@@ -95,6 +95,22 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+// donebar height listener
+document.addEventListener("DOMContentLoaded", function() {
+    let toDoBar = document.querySelector(".ToDoBar").querySelector(".row");
+    let doneBar = document.querySelector('.DoneBar');
+    let resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+            let toDoBarHeight = document.querySelector(".ToDoBar").querySelector(".row").clientHeight;
+            doneBar.style.maxHeight = `${toDoBarHeight}px`;
+
+            console.log('max-height changed to:', toDoBarHeight);
+          }
+    });
+    resizeObserver.observe(toDoBar);
+});
+
+
 function addDoneButtonListener(card) {
     let doneButton = card.querySelector('.DoneButton');
 
@@ -249,8 +265,4 @@ function prepCardData(card) {
     //console.log("prepCardData check json \n", JSON.stringify(payload));
     return payload;
 };
-
-
-
-
 

@@ -16,7 +16,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-auto">
-                    <div class="vstack DoneBar gap-2">
+                    <div class="vstack DoneBar gap-2" style="min-height: 700px; overflow-y: auto;">
                         {% for card in ToDoCard %}
                             {% if card.done %}
                                 <div class="card ToDoCard my_success_color text-light m-3" id="{{ card.id }}">
