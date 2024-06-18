@@ -8,9 +8,9 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 
-instance_path = __file__ + "/../" + "./content/" "./db"
+#instance_path = __file__ + "/../" + "./content/" "./db"
 db_name = "second.db"
-app = Flask(__name__, instance_path=instance_path)
+app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_name
 db = SQLAlchemy(app)
 
