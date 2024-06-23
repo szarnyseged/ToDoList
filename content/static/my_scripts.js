@@ -2,39 +2,9 @@
 // save button
 document.addEventListener("DOMContentLoaded", function() {
     let saveButton = document.getElementById("ConfirmSave");
-    let route = "/tasks";
 
     saveButton.addEventListener("click", function(event) {
-        event.preventDefault();
-
-        let fullJson = {
-            cards: []
-        };
-
-        allCard = document.querySelectorAll(".ToDoCard");
-        allCard.forEach(function(oneCard) {
-            fullJson.cards.push(prepCardData(oneCard))
-        });
-
-        // bugcheck
-        console.log("full json: ", JSON.stringify(fullJson));
-        makePostRequest(route, fullJson);
-
-        function makePostRequest(route, payload) {
-            let xhr = new XMLHttpRequest();
-            xhr.open("POST", route, true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        console.log("Request successful");
-                    } else {
-                        console.error("Request failed");
-                    }
-                };
-            };
-        xhr.send(JSON.stringify(payload));
-        };
+        saveAll(event)
     });
 });
 
@@ -184,7 +154,7 @@ function addAddLineButtonListener(card) {
 };
 
 
-var cardToDelete = null;
+let cardToDelete = null;
 function addDeleteButtonListener(card) {
     let deleteButton = card.querySelector(".DeleteButton");
 
@@ -266,3 +236,46 @@ function prepCardData(card) {
     return payload;
 };
 
+
+function saveAll(event=null) {
+    if (event != null) {
+        event.preventDefault();
+    }
+
+    let route = "/tasks";
+    let fullJson = {
+        cards: []
+    };
+
+    let allCard = document.querySelectorAll(".ToDoCard");
+    allCard.forEach(function(oneCard) {
+        fullJson.cards.push(prepCardData(oneCard))
+    });
+
+    // bugcheck
+    console.log("full json: ", JSON.stringify(fullJson));
+    makePostRequest(route, fullJson);
+
+    function makePostRequest(route, payload) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", route, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log("Request successful");
+                } else {
+                    console.error("Request failed");
+                }
+            };
+        };
+        xhr.send(JSON.stringify(payload));
+    };
+};
+
+/*
+//
+function enableAutosave(delay = 10000) {
+    setInterval(saveAll, delay)
+};
+*/

@@ -18,6 +18,8 @@ rework -> backend sends the cards data to js array. -> this array fills the DOM.
 update, add, delete on this array.
 then saving sends this array to backend.
 
+make enable autosave button on frontend + js.
+
 js make timestamp function is not in use ->
 handling the timestamp in backend doesnt work well, because the saving happens on all cards "at the same time".
 
