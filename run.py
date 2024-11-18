@@ -14,11 +14,15 @@ if __name__ == "__main__":
 """
 to do:
 
+saving not works fine on backend. deleted cards are not handled, only the added ones.
+-> ? check which is in the json, compare with the db, delete all which are not in the json.
+
+make enable autosave button on frontend + js.
+
 rework -> backend sends the cards data to js array. -> this array fills the DOM.
 update, add, delete on this array.
 then saving sends this array to backend.
 
-make enable autosave button on frontend + js.
 
 js make timestamp function is not in use ->
 handling the timestamp in backend doesnt work well, because the saving happens on all cards "at the same time".

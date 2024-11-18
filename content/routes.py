@@ -44,6 +44,7 @@ def home():
 def save():
     json_data = request.get_json()
     json_data = json_data["cards"]
+    card_ids = []
 
     for card in json_data:
         # card_id = json_data["card_id"] -> can cause error, if the key is none existent. not like: json_data.get("card_id")
@@ -60,6 +61,7 @@ def save():
         db.session.add(current_card_obj)
         # must commit here, because cannot add card content to the card which is not exists before.
         db.session.commit()
+        card_ids.append(current_card_obj.id)
 
 
         card_content = card["card_content"]["content"]
@@ -75,6 +77,21 @@ def save():
             current_content_obj.card_id = current_card_obj.id
             db.session.add(current_content_obj)
         db.session.commit()
+
+    # handle deleting
+    all_in_db = db.session.execute(db.select(ToDoCard)).scalars().all()
+    print("in json: ", set(card_ids))
+    print("in db: ", set(all_in_db))
+    
+    
+    diff = set(all_in_db) - set(card_ids)
+    print("diff: ", diff)
+    db.session.execute(db.delete())
+
+    """
+    for elem in all_in_db:
+        db.session.execute(db.delete())
+    """
 
     return redirect(url_for("home"))
 

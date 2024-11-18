@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
         addDoneButtonListener(newCard);
         addAddLineButtonListener(newCard);
         addDeleteButtonListener(newCard);
-        confirmDeleteListener()
+        confirmDeleteListener();
 
         function createCard() {
             let newCard = document.createElement("div");
@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
 document.addEventListener("DOMContentLoaded", function() {
     let addLineButtons = document.querySelectorAll(".card-link.AddLineButton");
     let doneButtons = document.querySelectorAll(".DoneButton");
+    let deleteButtons = document.querySelectorAll(".DeleteButton");
 
     doneButtons.forEach(function(button) {
         addDoneButtonListener(button.closest(".card"))
@@ -62,6 +63,12 @@ document.addEventListener("DOMContentLoaded", function() {
     addLineButtons.forEach(function(button) {
         addAddLineButtonListener(button.closest(".card"))
     });
+    
+    deleteButtons.forEach(function(button) {
+        addDeleteButtonListener(button.closest(".card"))
+    });
+    
+    confirmDeleteListener();
 });
 
 
@@ -154,6 +161,9 @@ function addAddLineButtonListener(card) {
 };
 
 
+// deletebutton handled by bootstrap modal. since the modal can have a single target,
+// it should be changed dynamically.
+// this variable is responsible to indetify which card does the confirm belongs to.
 let cardToDelete = null;
 function addDeleteButtonListener(card) {
     let deleteButton = card.querySelector(".DeleteButton");
