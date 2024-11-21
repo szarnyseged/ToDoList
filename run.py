@@ -12,26 +12,53 @@ if __name__ == "__main__":
     #app.run(debug=True, use_reloader=False)
 
 """
-to do:
-
-saving not works fine on backend. deleted cards are not handled, only the added ones.
--> ? check which is in the json, compare with the db, delete all which are not in the json.
-
-make enable autosave button on frontend + js.
-
-rework -> backend sends the cards data to js array. -> this array fills the DOM.
-update, add, delete on this array.
-then saving sends this array to backend.
-
-
-js make timestamp function is not in use ->
-handling the timestamp in backend doesnt work well, because the saving happens on all cards "at the same time".
+usage notes:
 
 create real db instead of memory ->
 (load db option in frontend)
 use the create_db.py to create dummy db manually.
+"""
 
-dynamic db change: flask-sqlalchemy doesnt support that.
+"""
+to do:
+
+1. saving not works fine on backend. deleted cards are not handled, only the added ones.
+-> ? check which is in the json, compare with the db, delete all which are not in the json.
+DONE
+
+7. frontend: h5 title is a flex item -> overflow problem 
+!modal-header div class causes this -> the deleting js func works fine without this class.
+why do i use it? (check on net what does it do)
+
+
+8. add a delete line button OR automatically delete empty lines.
+routes/save . -> for some reason there are a lot of "\n" -s in the json.
+js code looks fine. issue maybe the contenteditable div? 
+
+
+2. ! rework the db commits on save. -> the current solution commit once after each card creation
+ and once after all card content have been added to session. this results too many and unccessary
+ change on the db.
+
+ new solution:
+ -> 1. add each card to the session first. then commit (because the card contents cannot be added
+ before the cards themselves exists in db)
+ 2. then add each content to the correct cards in the session. commit.
+ -> this results 2 commits overall.
+
+
+3. make enable autosave button on frontend + js.
+
+4. rework -> backend sends the cards data to js array. -> this array fills the DOM.
+update, add, delete on this array.
+then saving sends this array to backend.
+
+
+5. js make timestamp function is not in use ->
+handling the timestamp in backend doesnt work well, because the saving happens on all cards "at the same time".
+
+6. dynamic db change: (one solution to "overwrite" when saving)
+flask-sqlalchemy doesnt support that.
 https://stackoverflow.com/questions/63827071/flask-sqlalchemy-dynamic-connection-to-different-databases
 
     #gpt -> db.engine error -> there is no setter for engine

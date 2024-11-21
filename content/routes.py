@@ -44,7 +44,7 @@ def home():
 def save():
     json_data = request.get_json()
     json_data = json_data["cards"]
-    card_ids = []
+    cards_in_json = []
 
     for card in json_data:
         # card_id = json_data["card_id"] -> can cause error, if the key is none existent. not like: json_data.get("card_id")
@@ -61,11 +61,11 @@ def save():
         db.session.add(current_card_obj)
         # must commit here, because cannot add card content to the card which is not exists before.
         db.session.commit()
-        card_ids.append(current_card_obj.id)
+        cards_in_json.append(current_card_obj)
 
 
         card_content = card["card_content"]["content"]
-        #print("all content: \n", card_content)
+        print("all content: \n", card_content)
         # same as new cards, no real id. assign one now.
         for one_content in card_content:
             if one_content["content_id"] == "_":
@@ -75,22 +75,36 @@ def save():
             current_content_obj.checkbox_on_off = one_content["is_checked"]
             current_content_obj.content_text = one_content["text"]
             current_content_obj.card_id = current_card_obj.id
-            db.session.add(current_content_obj)
+            # deleting empty lines automatically
+            print("content len: ", len(current_content_obj.content_text))
+            #print(current_content_obj.content_text)
+            if len(current_content_obj.content_text) > 0:
+                db.session.add(current_content_obj)
         db.session.commit()
 
-    # handle deleting
-    all_in_db = db.session.execute(db.select(ToDoCard)).scalars().all()
-    print("in json: ", set(card_ids))
-    print("in db: ", set(all_in_db))
+    # handle deleting:
+    cards_in_db = db.session.execute(db.select(ToDoCard)).scalars().all()
+    print("in json: ", set(cards_in_json))
+    print("in db: ", set(cards_in_db))
     
-    
-    diff = set(all_in_db) - set(card_ids)
+    diff = set(cards_in_db) - set(cards_in_json)
     print("diff: ", diff)
-    db.session.execute(db.delete())
+    
+    for record in diff:
+        db.session.delete(record)
+    print("cards deleted: ", diff, "\n")
+    db.session.commit()
+
 
     """
-    for elem in all_in_db:
-        db.session.execute(db.delete())
+    # 1. way
+    db.session.execute(db.delete(ToDoCard).where(ToDoCard.id = ....))
+    db.session.commit()
+
+    # 2. way
+    for record in records_to_delete:
+        db.session.delete(record)
+    db.session.commit()
     """
 
     return redirect(url_for("home"))
