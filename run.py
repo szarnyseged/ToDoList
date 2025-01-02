@@ -22,6 +22,8 @@ use the create_db.py to create dummy db manually.
 """
 to do:
 
+IMPORTANTS:
+
 1. saving not works fine on backend. deleted cards are not handled, only the added ones.
 -> ? check which is in the json, compare with the db, delete all which are not in the json.
 DONE
@@ -29,11 +31,20 @@ DONE
 7. frontend: h5 title is a flex item -> overflow problem 
 !modal-header div class causes this -> the deleting js func works fine without this class.
 why do i use it? (check on net what does it do)
-
+DONE
 
 8. add a delete line button OR automatically delete empty lines.
 routes/save . -> for some reason there are a lot of "\n" -s in the json.
 js code looks fine. issue maybe the contenteditable div? 
+
+10?. cross-platform. make it for ios/android (for me)
+too hard?
+
+
+IMPROVEMENTS:
+
+9. make sub-cards for sub-orders. there is a main todo, which often should be broken down
+into sub-todo's.
 
 
 2. ! rework the db commits on save. -> the current solution commit once after each card creation

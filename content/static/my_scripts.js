@@ -30,9 +30,9 @@ document.addEventListener("DOMContentLoaded", function() {
             newCard.classList.add("card", "ToDoCard", "bg-secondary-subtle", "text-light", "m-3");
             newCard.innerHTML = `
                 <div class="card-body">
-                    <div class="modal-header">
+                    <div class="modal-header" style="display: block;">
+                        <button type="button" class="btn-close btn-block DeleteButton float-end" data-bs-toggle="modal" data-bs-target="#DeleteModal" aria-label="Close"></button>
                         <h5 contenteditable="True" class="card-title text-black">Title</h5>
-                        <button type="button" class="btn-close DeleteButton" data-bs-toggle="modal" data-bs-target="#DeleteModal" aria-label="Close"></button>
                     </div>
                     <h6 contenteditable="True" class="card-subtitle mb-2 text-body-secondary">Subtitle</h6>
                     <ul class="list-group content_group">
